@@ -1,11 +1,12 @@
 import React, {FC} from 'react';
-import logo from './logo.svg';
 import './App.css';
+import Products from "./products/products";
 
 const App: FC <any> = () => {
   return (
   <>
-    <h2> Bart</h2>
+    <Products/>
+
   </>);
 
 }

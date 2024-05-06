@@ -1,0 +1,14 @@
+.textBox{
+    text-align: center;
+    background-color: #ecd9dd;
+}
+.imageBox{
+    background-color: #e8c4cc;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.image{
+    margin: 5px;
+}
