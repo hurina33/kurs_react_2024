@@ -1,11 +1,12 @@
 import React, {FC} from 'react';
 import logo from './logo.svg';
 import './App.css';
+import FormComponents from "./conponents/FormComponents";
 
 const App: FC <any> = () => {
   return (
   <>
-    <h2> Bart</h2>
+    <div> <FormComponents/></div>
   </>);
 
 }
