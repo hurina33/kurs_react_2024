@@ -19,7 +19,7 @@ const CommentsPage = () => {
                 .then(value => setComments(value.data))
         }
 
-    }, []);
+    }, [id]);
     return (
         <div>
                 <CommentsComponent comments={comments}/>

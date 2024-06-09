@@ -5,16 +5,15 @@ import {userApiService} from "../services/api-service";
 import {Outlet, useLocation, useParams} from "react-router-dom";
 
 const PostsPage = () => {
-const {id} = useParams()
+const {postId} = useParams()
 
     const location = useLocation();
-console.log(location) ///????? zachem eto
 
     const[posts, setPosts] = useState<IPostModel[]>([])
     useEffect(() => {
-        if(id) {
+        if(postId) {
             userApiService
-                .getPostsOfUser(id)
+                .getPostsOfUser(postId)
                 .then(value => setPosts(value.data))
         } else{
             userApiService
@@ -22,7 +21,7 @@ console.log(location) ///????? zachem eto
                 .then(value => setPosts(value.data))
         }
 
-    }, []);
+    }, [postId]);
     return (
         <div>
             <PostsComponent posts={posts}/>
