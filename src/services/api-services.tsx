@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, {AxiosError} from "axios";
 import {IForm} from "../models/IForm";
 import {ITokenObtainPair} from "../models/ITokenObtainPair";
 import {ICarPaginatedModel} from "../models/ICarPaginatedModel";
@@ -12,7 +12,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use((request)=> {
 
     if (localStorage.getItem('tokenPair') && request.url !=='auth/refresh')
-        request.headers.set('Authorization', 'Bearer'+ retriveLocalStorageDate<ITokenObtainPair>('tokenPair').access)
+        request.headers.set('Authorization', 'Bearer '+ retriveLocalStorageDate<ITokenObtainPair>('tokenPair').access)
     return request;
 })
 const authService = {
@@ -25,13 +25,27 @@ const authService = {
             console.log(e)
         }
         return !!(response?.data?.access && response?.data?.refresh)
+    },
+    refresh: async (refreshToken:string) => {
+        const response = await axiosInstance.post <ITokenObtainPair> ('/auth/refresh', {refresh:refreshToken});
+        localStorage.setItem('tokenPair', JSON.stringify(response.data))
     }
 }
 
 const carService ={
-    getCars: async (): Promise<ICarPaginatedModel> => {
-        const response=await axiosInstance.get<ICarPaginatedModel>('/cars')
-        return response.data;
+    getCars: async ()=> {
+        try {
+            const response=await axiosInstance.get<ICarPaginatedModel>('/cars')
+            return response.data;
+        } catch (e){
+            const axiosError = e as AxiosError;
+            if (axiosError?.response?.status===401){
+                const refreshToken = retriveLocalStorageDate<ITokenObtainPair>('tokenPair').refresh;
+                await authService.refresh(refreshToken);
+                await carService.getCars()
+            }
+        }
+
 }
 }
 export {
