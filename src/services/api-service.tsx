@@ -34,19 +34,19 @@ const authService = {
 },
 }
 const carService = {
-    getCars: async ():Promise<ICarPaginatedModel | null>=>{
+    getCars: async (page:string)=>{
+
         try {
-            const response = await axiosInstance.get<ICarPaginatedModel>('/cars')
+            const response = await axiosInstance.get<ICarPaginatedModel>('/cars', {params:{page}})
             return response.data
-        } catch (e){
-           const axiosError = e as AxiosError;
-           if (axiosError?.response?.status === 401){
-               const refreshToken = retriveLocalStorageData<ITokenObtainPair>('tokenPair').refresh;
-               await authService.refresh(refreshToken)
-               return await carService.getCars()
-           }
+        } catch (e) {
+            const axiosError = e as AxiosError;
+            if (axiosError?.response?.status === 401) {
+                const refreshToken = retriveLocalStorageData<ITokenObtainPair>('tokenPair').refresh;
+                await authService.refresh(refreshToken)
+                await carService.getCars(page)
+            }
         }
-        return null
     }
 }
 export {
